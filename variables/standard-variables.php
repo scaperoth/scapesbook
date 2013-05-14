@@ -15,10 +15,8 @@ $page_type = $page_info['type'];
 //can override default title on customer *-variables.php pages, "ScapesBook"
 $default_page_title = $page_info['title'];
 
+//get page url
 $page_url = $page_info['url'];
-
-//make sure user is logged in
-is_loggedin($page_url);
 
 //header
 $styles = 

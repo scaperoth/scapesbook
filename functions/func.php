@@ -60,15 +60,19 @@ function log_in($user, $pass){
 }
 
 /**
- * check if user is logged in
+ * check if user is logged in and direct/redirect page accordingly
+ * @param $url string current page url
+ * @return void
  */
 function is_loggedin($url){
     if($url != 'login.php'){
+        //if loggedin and it is not the login page then no redirect and return
         if($_SESSION['loggedin']){
             return TRUE;
         }
         else header('location: ../../login.php');
     }
+    //if it is the login page then check for login. no reason to access login page if already logged in
     else{
         if($_SESSION['loggedin'])
         {
@@ -95,6 +99,7 @@ function clean_string($string){
 
 /**
  * print out header
+ * @return string html header
  */
 function get_header(){
     $header = '
@@ -134,6 +139,7 @@ function get_header(){
 
 /**
  * print out top navigation
+ * @return string html of top navigation
  */
 function get_top_nav(){
     $user_info = get_user_info($_SESSION['username']);
@@ -170,6 +176,10 @@ function get_top_nav(){
              </div><!--end main-menu-->';
 }
 
+/**
+ * print out top navigation
+ * @return string html of mobile responsive navigation
+ */
 function get_mobile_nav(){
     $user_info = get_user_info($_SESSION['username']);
     return '<div class="mobile mobile-menu">
@@ -198,9 +208,10 @@ function get_mobile_nav(){
 /**********************\
  * POST Functions 
 \**********************/
-
 /*
- * script to generate "create post" textarea
+ * script to generate "create post" textarea with option to post to a wall
+ * @param $receiver string - if present then the post will be assigned to the receiving user
+ * @return string html of post textarea
  */
 function get_create_new_post($receiver = NULL){
     $user_info = get_user_info($_GET['id'],'uid');
