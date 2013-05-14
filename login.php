@@ -1,5 +1,5 @@
 <?php 
-include('variables/standard-variables.php');
+include($_SERVER['DOCUMENT_ROOT'].'/variables/standard-variables.php');
 ?>
 
 <!DOCTYPE html>
@@ -17,8 +17,8 @@ include('variables/standard-variables.php');
     </head>
     <body>
         <header>
-            
         </header>
+        
         <div class="container">
             <div class="form" id="login-form-container">
                 <form id="loginForm" name="loginForm" method="post" >

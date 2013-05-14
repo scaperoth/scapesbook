@@ -1,5 +1,4 @@
 <?php
-include "../functions/func.php";
 
 $custom_page_title = $user_info['fname'].'\'s Friend Requests';
 

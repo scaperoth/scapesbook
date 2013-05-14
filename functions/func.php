@@ -4,9 +4,6 @@ include_once('db.php');
 $page_info = get_page_info();
 $user_info = get_user_info($_SESSION['username']);
 
-//don't check login on the login page, the validate page, or the create user page to avoid conflict
-if($page_info['type']!='login' && strripos($page_info['type'],'login_validate') )
-    is_loggedin($page_url);
 
 /****************************\
  * Administrative Functions 
@@ -159,7 +156,7 @@ function get_top_nav(){
                                     <nav class="reveal" data-reveal hidden>
                                         <ul id="accountoptions">
                                             
-                                            <a href="messages.php"><li>Messages'.(get_all_unread_msg()?' ('.get_all_unread_msg().') ':'').'</li></a>
+                                            <a href="messages.php"><li>Messages'.(get_num_all_unread_msg()?' ('.get_num_all_unread_msg().') ':'').'</li></a>
                                             <li>
                                                 <form action="logout.php" id="logoutForm" method="post">
                                                     <input hidden name="loggingout"/>
@@ -193,7 +190,7 @@ function get_mobile_nav(){
                         <ul>
                             <li class="menu-user"><a href="user.php?id='.$user_info['id'].'">'.$user_info['fname'].' '.$user_info['lname'].'</a></li>
                             <li><a href="index.php">Home</a></li>
-                            <li><a href="messages.php">Messages'.(get_all_unread_msg()?' ('.get_all_unread_msg().')':'').'</a></li>
+                            <li><a href="messages.php">Messages'.(get_num_all_unread_msg()?' ('.get_num_all_unread_msg().')':'').'</a></li>
                             <li>
                                 <form action="logout.php" id="logoutForm" method="post">
                                    <input hidden name="loggingout"/>
@@ -622,7 +619,40 @@ function create_message_select($id){
 }
 
 /**
- * returns number of unread messages from user
+ * returns number of unread messages from specific user
+ */
+function get_one_user_unread_msgs($friend){
+    global $mysqli;
+    $user_id = $_SESSION['id'];
+    $query = 'SELECT (select username from users where uid = "'.$friend.'") as username, msg, sender_id, time_sent FROM messages
+             WHERE (sender_id = '.$friend.' AND receiver_id = '.$user_id.') and unread_flag = 1';
+    if($result = $mysqli->query($query))
+    {
+        while($row = $result->fetch_assoc())
+        {
+            $strtime = strtotime($row['time_sent']);
+            //$time = date('M d, Y g:i',$strtime);
+            $time = date('M d, Y',$strtime);
+
+            $return .= '<li class="message">
+                            <p class="time">'.$time.'</p>
+                          <div class="message-details">
+                              <p class="user">
+                                <a href="user.php?id='.$row['sender_id'].'">'. $row['username'] .'</a>
+                              </p>
+                          
+                              <div class="clearfix wrap">
+                                <p class="user-message">'.stripslashes($row['msg']).'</p> 
+                              </div>
+                          </div><!--end message-details-->
+                          </li>';
+        }
+        return $return;
+    }
+}
+
+/**
+ * returns number of unread messages from specific user
  */
 function get_one_user_num_unread_msg($friend){
     global $mysqli;
@@ -636,7 +666,9 @@ function get_one_user_num_unread_msg($friend){
     }
 }
 
-function get_all_unread_msg(){
+
+
+function get_num_all_unread_msg(){
     global $mysqli;
     $user_id = $_SESSION['id'];
     $query = 'SELECT COUNT(mid) as num_msg FROM messages WHERE receiver_id = '.$user_id.' and unread_flag = 1';

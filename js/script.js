@@ -1,6 +1,6 @@
 //var root = 'http://scaperoth.com/projects/scapesbook/';
 var root = '../';
-var message_interval;
+var check_for_new_msg_interval;
 
 
 $('#create-new-post').focus(function () {
@@ -33,21 +33,22 @@ $(document).ready(function () {
 
 function set_message_action(){
     $('.message-user').click(function () {
-        clearInterval(message_interval);
+        clearInterval(check_for_new_msg_interval);
         console.log('test');
         var receiver = $(this).attr('data-name');
 
         $('.message-user').removeClass('active');
 
         $(this).addClass('active');
+        
+        load_messages(receiver);
 
         create_reply_box(receiver);
 
-        load_messages(receiver);
 
-        message_interval = setInterval(function () {
-            load_messages(receiver);
-        }, 10000);
+        check_for_new_msg_interval = setInterval(function () {
+            check_for_new_msg(receiver);
+        }, 3000);
 
     });
 }
@@ -56,16 +57,18 @@ function load_messages(receiver){
         var response = $.parseJSON(data);
         $('.message-container').html(response.msg);
 
+        get_num_unread_messages();
+
         if ($('.message-container').html() == '') {
-            //console.log('no-messages');
+            console.log('no-messages');
             //$('.message-container').html(document.getElementById('message-error').innerHTML);
         }
         $(".message-list").mCustomScrollbar({
-            scrollInertia:0
+            scrollInertia: 0
         });
 
-        $(".message-list").mCustomScrollbar("scrollTo","last",{
-            scrollInertia:0
+        $(".message-list").mCustomScrollbar("scrollTo", "last", {
+            scrollInertia: 0
         });
 
 
@@ -98,12 +101,25 @@ function send_message(sender, receiver){
     }
 }
 
+function check_for_new_msg(receiver){
+    $.post(root + "php_actions/message_actions/check_for_new_msg.php", { friend: receiver }, function (data) {
+        //console.log(data);
+        if (data) {
+            $('.message-list .mCSB_container').append(data);
+            $(".message-list").mCustomScrollbar("update");
+            $(".message-list").mCustomScrollbar("scrollTo", "last", {
+                scrollInertia: 0
+            });
+        }
+        else {
+        }
+
+    });
+}
+
 function get_num_unread_messages(){
     $.post(root + "php_actions/message_actions/get_unread.php", function (data) {
         $('#user-list').html(data);
         set_message_action();
     });
-}
-function load_posts(){
-    
 }

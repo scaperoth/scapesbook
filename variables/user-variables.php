@@ -1,5 +1,4 @@
 <?php
-include "../functions/func.php";
 /**
  * user variables
  */
