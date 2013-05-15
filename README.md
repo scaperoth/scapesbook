@@ -1,4 +1,4 @@
-###ScapesBook
+#ScapesBook
 Contributors: Matt Scaperoth 
 Tags: social network, networking, friends, responsive
 
