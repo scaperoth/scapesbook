@@ -1,11 +1,14 @@
 <?php
 include('../../functions/func.php');
 
+//get users potential relationship is between
 $potential_friend = $_GET['submit'];
-$user_info = get_user_info($_SESSION['username']);
+$user_id = $_SESSION['id'];
 
-if(strcmp($user_info['id'],$potential_friend)){
-    $request_friend_query= 'call request_friend("'.$user_info['id'].'","'.$potential_friend.'");';
+//make sure requester is different than session user
+if(strcmp($user_id,$potential_friend)){
+    //request friend, add to request table using request_friend(int, int) procedure
+    $request_friend_query= 'call request_friend("'.$user_id.'","'.$potential_friend.'");';
 
     //echo $request_friend_query.'<br>';
     if($mysqli->query($request_friend_query)) {
@@ -25,5 +28,6 @@ if(strcmp($user_info['id'],$potential_friend)){
     }
     //else die($mysqli->error);
 }
+//redirect to user page
 header('location: ../../user.php?id='.$potential_friend);
 ?>

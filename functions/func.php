@@ -9,8 +9,8 @@ $user_info = get_user_info($_SESSION['username']);
  * Administrative Functions 
 \****************************/
 /**
- * returns the page type
- * @return array[mixed]
+ * returns the page attributes
+ * @return array[mixed] type, url, and title
  */
 function get_page_info(){
     $currentFile = $_SERVER["PHP_SELF"];
@@ -67,13 +67,13 @@ function is_loggedin($url){
         if($_SESSION['loggedin']){
             return TRUE;
         }
-        else header('location: ../../login.php');
+        else header('location: login.php');
     }
     //if it is the login page then check for login. no reason to access login page if already logged in
     else{
         if($_SESSION['loggedin'])
         {
-         header('location: ../../index.php');
+         header('location: index.php');
         }
     }
 }
@@ -95,7 +95,7 @@ function clean_string($string){
 \**********************/
 
 /**
- * print out header
+ * print out header with searchbar, title and responsive top navigation elements
  * @return string html header
  */
 function get_header(){
@@ -227,7 +227,9 @@ function get_create_new_post($receiver = NULL){
 
 
 /*
- * script to generate "create post" textarea
+ * script to generate posts for home page.
+ * Posts that can be viewed are from the user, the users friends, and posts between two friends of the user
+ * @return string html for Posts
  */
 function get_home_posts(){
     global $mysqli;
@@ -264,7 +266,11 @@ function get_home_posts(){
 }
 
 /**
- * returns posts for my wall
+ * get user page posts. 
+ * posts that are displayed are ones only belonging to user 
+ * including posts that other put on the user's wall and posts sent to other users
+ * main focus of page is user interaction, not friends.
+ * @return string html users posts
  */
 function get_user_page_posts(){
     global $mysqli;
@@ -277,7 +283,9 @@ function get_user_page_posts(){
 }
 
 /**
- * returns post info in assoc array
+ * reusable function to return result of posts query in assoc array
+ * @param $query string query for posts
+ * @return array[mixed] attributes of post whether it is for the home page or the user page
  */
 function get_post_query($query){
     global $mysqli;
@@ -309,7 +317,9 @@ function get_post_query($query){
 
 
 /**
- * creates a new post element
+ * reusable function to create post from assoc array with post attributes
+ * @param $post_info array[mixed] array of post attributes to create new post
+ * @return string html of single post
  */
 function generate_post($post_info){
 
@@ -355,12 +365,16 @@ function get_user_info($value, $selector = 'username'){
 }
 
 /**
- * function creates the user page based on the id
+ * function creates the profile page based on the id
+ * session user must be a friend or the same as/of the _GET user to view profile
+ * @param $id get variable from user.php?id=  provides the attributes of the user to be viewed
+ * @return string html of user profile
  */
 function get_profile_page($id){
     $user_info = get_user_info($id,'uid');
     if($user_info)
     {
+        //if profile exists then return the profile otherwise state that no profile is available
         $profile_default = (($user_info['profile'])?'<p>'.$user_info['profile'].'</p>':'<p>No Profile Information Available');
     
         $return .= '<div class="user-info">';
@@ -373,6 +387,7 @@ function get_profile_page($id){
         $return .= '<div class="user-profile profile">';
         if(is_friend())
         {
+            //checks if session user is owner then allow edit otherwise return the profile default
             $return.=(($user_info['username']==$_SESSION['username'])?edit_profile($user_info['profile']):'<p>'.$profile_default.'</p>');
         }
         else
@@ -391,15 +406,21 @@ function get_profile_page($id){
 }
 
 /**
- * this function allows user to update profile
+ * this function allows user to update profile if session user is the owner
+ * @param $profileTxt default value is blank
+ * @return string html for editing profile
  */
-function edit_profile($profileTtxt =''){
+function edit_profile($profileTxt =''){
     return '<form id="editProfileForm" data-action="php_actions/user_actions/edit_profile.php" method="POST">
-                <textarea id="profileInfo" name="profile" class="text box" placeholder="Tell a little about yourself">'.$profileTtxt.'</textarea>
+                <textarea id="profileInfo" name="profile" class="text box" placeholder="Tell a little about yourself">'.$profileTxt.'</textarea>
                 <button type="submit">Edit</button>
             </form>';
 }
 
+/**
+ * returns list of friends in ul, li format
+ * @return string html list of friends
+ */
 function get_my_friends(){
     global $mysqli, $user_info;
     $friend_query = 'SELECT fname, lname, uid,username FROM users,friends 
@@ -434,7 +455,8 @@ function get_my_friends(){
 \*********************************/
 
 /*
- * script to check if is already friend
+ * check if user is friend based on user.php?id= variable
+ * @return boolean is friend (also used if user matches get variable) or not friend
  */
 function is_friend(){
     global $mysqli;
@@ -462,7 +484,8 @@ function is_friend(){
 }
 
 /*
- * returns all current friend requests
+ * gets all current friend requests
+ * @return string html of all friend requests with option to add or ignore
  */
 function get_friend_requests(){
     global $mysqli;
@@ -488,6 +511,10 @@ function get_friend_requests(){
     return $return;
 }
 
+/*
+ * gets all number of current friend requests
+ * @return int number of friend requests
+ */
 function count_friend_requests(){
    global $mysqli;
 
@@ -500,7 +527,10 @@ function count_friend_requests(){
 }
 
 /**
- * create the friend request list
+ * create a friend request with ignore or accept buttons
+ * @param $username username of requester
+ * @param $id id of requester
+ * @return string html of friend request
  */
 function create_friend_request($username, $id){
     return '<div class="friend-request">
@@ -519,7 +549,8 @@ function create_friend_request($username, $id){
 
 
 /*
- * script to add friend
+ * tells whether or not already friend and creates button to request friendship if not already friend
+ * @return string html either that a request is sent, a request button, or blank if already friends or current user
  */
 function get_friend_status(){
     $return ='';
@@ -535,6 +566,7 @@ function get_friend_status(){
 
 /**
  * create the button to request friend
+ * @return string html for friend request button
  */
 function create_request_friend_btn(){
     return '<form id="addFriendForm" action="php_actions/user_actions/request_friend.php">
@@ -544,6 +576,7 @@ function create_request_friend_btn(){
 
 /**
  * set text to friend request sent
+ * @return string friend request is sent
  */
 function show_request_sent(){
     return '<p>Friend Request Sent</p>';
@@ -551,6 +584,7 @@ function show_request_sent(){
 
 /**
  * check if friend request has been sent
+ * @return boolean whether or not friend has already been requested
  */
 function is_friend_request(){
     global $mysqli;
@@ -571,7 +605,8 @@ function is_friend_request(){
 \**********************/
 
 /**
- * get all friends for message
+ * get all friends for message page
+ * @return string html list of friends to message with data attributes to activate chat
  */
 function get_message_friends(){
     global $mysqli;
@@ -599,7 +634,9 @@ function get_message_friends(){
 }
 
 /**
- * create the list of friends for messaging 
+ * create a friend list element with data attributes
+ * @param $id id of user to create list item for
+ * @return string list item with friend info
  */
 function create_message_select($id){
     global $mysqli;
@@ -619,7 +656,9 @@ function create_message_select($id){
 }
 
 /**
- * returns number of unread messages from specific user
+ * get the unread messages from specific friend
+ * @param $friend is id of friend to view unread messages from
+ * @return string html of unread message block from friend to append to chat box
  */
 function get_one_user_unread_msgs($friend){
     global $mysqli;
@@ -653,6 +692,9 @@ function get_one_user_unread_msgs($friend){
 
 /**
  * returns number of unread messages from specific user
+ * is used to display number of messages on message page from specific user
+ * @param $friend id of friend to get number of unread messages from
+ * @return int number of messages or blank if no messages found
  */
 function get_one_user_num_unread_msg($friend){
     global $mysqli;
@@ -666,8 +708,11 @@ function get_one_user_num_unread_msg($friend){
     }
 }
 
-
-
+/**
+ * returns number of all unread messages
+ * is used to display number of messages across site
+ * @return int number of messages or blank if no messages found
+ */
 function get_num_all_unread_msg(){
     global $mysqli;
     $user_id = $_SESSION['id'];
@@ -681,7 +726,9 @@ function get_num_all_unread_msg(){
 }
 
 /**
- * check if user in cycle is current user
+ * check if user argument is current session user
+ * @param $check_id user id to check against
+ * @return boolean whether or not check_id is current user
  */
 function is_curr_user($check_id){
     $user_info = get_user_info($_SESSION['username']);
@@ -691,6 +738,11 @@ function is_curr_user($check_id){
     else return 1;
 }
 
+/**
+ * create container for replying in chat
+ * @param $user_id id of user that chat is with
+ * @return string html of textarea used to chat
+ */
 function get_message_reply_container($user_id){
     return '<div id="message-form-div">
             <form id="sendMessageForm">

@@ -2,14 +2,16 @@
 include('functions/func.php');
 
 /*
- *standard variables
+ *standard variables used on every page
  */
+
+ //message to display if just created user and logged in message is set in php_actions/user_actions/create_user.php
 $welcome_message = ($_SESSION['Welcome_message']?'<h2 class="welcome-message">'.$_SESSION['Welcome_message'].'!</h2>':'');
 
-//num_alert
+//num_alert get num of unread messages, if any
 $num_messages = (get_num_all_unread_msg()?'('.get_num_all_unread_msg().') ':'');
 
-//page information
+//page information type, e.g. user, index, profile, etc.
 $page_type = $page_info['type'];
 
 //can override default title on customer *-variables.php pages, "ScapesBook"
@@ -26,11 +28,13 @@ $styles =
 "<link rel='stylesheet' href='css/normalize.css'/>
         <link rel='stylesheet' href='css/main.css'/>
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>";
-
+//get header html
 $header=get_header();
 
+//get number of friend requests
 $num_friend_requests = count_friend_requests();
 
+//print message for friend requests
 $requests_message = ($num_friend_requests?'<p>You have '.$num_friend_requests.' <a href="friend.php">friend request(s)</a><p>':'');
 
 //footer

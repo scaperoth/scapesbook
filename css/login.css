@@ -1,1 +1,33 @@
+.limiter{
+    padding: 20px 0;
+}
+.description{
+    text-align: center;
+}
+.form{
+    
+    width: 200px;
+    margin: 0 auto;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px #ddd;
+    margin-bottom: 50px;
+    padding: 10px;
+}
+.form form p{
+    margin-top: 0;
+}
 
+.error{
+    color: #d00;
+    margin-bottom: 10px;
+}
+
+@media only screen and (min-width: 520px) {
+    .limiter{
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        box-shadow: 0px 1px 20px #ccc;
+    }
+
+}

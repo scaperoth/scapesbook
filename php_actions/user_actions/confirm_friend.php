@@ -1,12 +1,16 @@
 <?php
 include('../../functions/func.php');
 
+//get friends to confirm
 $potential_friend = $_POST['confirm'];
-$user_info = get_user_info($_SESSION['username']);
+$user_id = $_SESSION['id'];
 
-if(strcmp($user_info['id'],$potential_friend)){
-    $add_friend_query= 'CALL add_friend("'.$user_info['id'].'","'.$potential_friend.'");';
-    $add_friend_query.= 'DELETE FROM friend_requests WHERE receiver_id = "'.$user_info['id'].'" AND sender_id = "'.$potential_friend.'";';
+//make sure request isn't for current user to confirm themselves, if not continue
+if(strcmp($user_id,$potential_friend)){
+
+    //add friend and remove friend from friend requests
+    $add_friend_query= 'CALL add_friend("'.$user_id.'","'.$potential_friend.'");';
+    $add_friend_query.= 'DELETE FROM friend_requests WHERE receiver_id = "'.$user_id.'" AND sender_id = "'.$potential_friend.'";';
     //echo $add_friend_query;
     if($mysqli->multi_query($add_friend_query)) {
          do {

@@ -1,7 +1,8 @@
 <?php
-    
+   //begin session on each page since every page includes the functions file and the functions file includes the db.php file
    session_start();
    
+   //first one for online server, second one for local machine
    //$mysqli = new mysqli("scapesbook.db.10489393.hostedresource.com", "scapesbook", "Sc@pesB00k", "scapesbook");
    $mysqli = new mysqli("localhost", "root", "scaperot12", "scapesbook");
 

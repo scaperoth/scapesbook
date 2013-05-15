@@ -1,15 +1,27 @@
 <?php
+/*********************************\
+* @DEPRECATED depreciated file, 
+    user now has to go through
+    confirm process instead
+    of just adding a friend
+\*********************************/
 include('../../functions/func.php');
+
+//get users to be friends
 $potential_friend = $_POST['submit'];
-$user_info = get_user_info($_SESSION['username']);
+$user_id = $_SESSION['id'];
 
 //echo $user_info['id'].'<br>';
 
-if(strcmp($user_info['id'],$potential_friend)){
-    $add_friend_query = 'call add_friend("'.$user_info['id'].'","'.$potential_friend.'");';
-    $add_friend_query.= 'call add_friend("'.$potential_friend.'","'.$user_info['id'].'");';
+//compare whether or not request is for current session user, if not continue
+if(strcmp($user_id ,$potential_friend)){
+    //add friend for both parties
+    $add_friend_query = 'call add_friend("'.$user_id .'","'.$potential_friend.'");';
+    $add_friend_query.= 'call add_friend("'.$potential_friend.'","'.$user_id .'");';
 
-  //  echo $add_friend_query.'<br>';
+    //echo $add_friend_query.'<br>';
+
+    //execute multiple queries
     if($mysqli->multi_query($add_friend_query)) {
          do {
             /* store first result set */
@@ -27,5 +39,7 @@ if(strcmp($user_info['id'],$potential_friend)){
     }
     else die($mysqli->error);
 }
+
+//redirect to page that request came from
 header('location: '.$_SERVER['HTTP_REFERER']);
 ?>
