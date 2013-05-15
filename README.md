@@ -1,16 +1,16 @@
-=== ScapesBook ===
+###ScapesBook
 Contributors: Matt Scaperoth 
 Tags: social network, networking, friends, responsive
 
 Social networking site used to share profiles, add friends, leave posts, update statuses, and send messages with friends.
 
-== Description ==
+##Description
 
 Program implements responsive design to provide a simple social network where 
 people can interact through friendships, posts and messages. 
 
-= How It Works =
-
+How It Works
+--
 Program is laid out in a template fashion. Each page has a variables page in the variables file, i.e. the user.php
 file has a user-variables file. These variables files contain calls to functions to create "node" elements 
 for each specific page that can be easily manipulated. 
@@ -39,16 +39,16 @@ in 'page'.php...
     <?php echo $variable;?>
 </div>
 
-= Resources = 
-
+Resources 
+--
 Autocomplete js
----
+-
 autocomplte js from http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete 
 used for user search box. uses ajax list to alter input to act like dropdown and return
 search results
 
 Custom Scrollbar js
----
+-
 Custom scrollbar from http://manos.malihu.gr/jquery-custom-content-scroller/
 adds custom scrollbar to any overflow element. refer to script.js for example
  
