@@ -1,5 +1,4 @@
 <?php
-session_start();
 include('../../functions/func.php');
 
 //escape characters in profile

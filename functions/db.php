@@ -4,7 +4,7 @@
    
    //first one for online server, second one for local machine
    //$mysqli = new mysqli("scapesbook.db.10489393.hostedresource.com", "scapesbook", "Sc@pesB00k", "scapesbook");
-   $mysqli = new mysqli("localhost", "root", "scaperot12", "scapesbook");
+   $mysqli = new mysqli("localhost","scapesbook", "Sc@pesB00k", "scapesbook");
 
     /* check connection */
     if ($mysqli->connect_errno) {

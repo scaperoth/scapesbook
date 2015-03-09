@@ -1,10 +1,17 @@
 <?php
-session_start();
-if(isset($_POST['loggingout'])){
-    $_SESSION['loggedin']=FALSE;
+
+include ('functions/func.php');
+
+if (isset($_SESSION['loggedin']))
+{
+    $_SESSION['loggedin'] = FALSE;
+
+    var_dump($_SESSION);
     unset($_SESSION['id']);
     unset($_SESSION['username']);
     session_destroy();
 }
-header('location: index.php');
+
+header('location: login.php');
 ?>
+

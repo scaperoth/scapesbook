@@ -5,7 +5,7 @@
 * @author Matt Scaperoth
 \*******************************************/
 //var root = 'http://scaperoth.com/projects/scapesbook/';
-var root = '../';
+var root = './';
 $(document).ready(function () {
     var split = location.search.replace('?', '').split('=');
     var variable = split[0];

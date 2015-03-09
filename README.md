@@ -4,6 +4,8 @@ Tags: social network, networking, friends, responsive
 
 Social networking site used to share profiles, add friends, leave posts, update statuses, and send messages with friends.
 
+> Note:: This repository is a proof of concept that a simple social network could be built with a small code base and no real framework. This is not to be used in any sort of production environment. It uses some bad practices (at times, extremely bad). 
+
 ###Description
 
 Program implements responsive design to provide a simple social network where 

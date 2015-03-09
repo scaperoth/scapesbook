@@ -1,5 +1,5 @@
 <?php
-include "../../functions/func.php";
+require "../../functions/func.php";
 
 //get user and encrypt password
 $username = $_POST['username'];

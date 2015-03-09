@@ -8,7 +8,7 @@
 \*******************************************/
 
 //var root = 'http://scaperoth.com/projects/scapesbook/';
-var root = '../';
+var root = './';
 var check_for_new_msg_interval;
 
 //make create post textarea larger on focus and display submit button

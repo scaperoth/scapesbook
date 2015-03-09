@@ -1,6 +1,6 @@
 //relative root
 //var root = 'http://scaperoth.com/projects/scapesbook/';
-var root = '../';
+var root = './';
 
 /**
  * submit login form to php_actions/login_actions/login_validate.php and serialize the login form to process
@@ -12,7 +12,9 @@ $('#loginForm').submit(function (e) {
         if (!data) {
             $('#loginmessage').html('<p class="error">Invalid Username or Password</p>');
         }
-        else { location.reload(); }
+        else {
+            location.reload();
+        }
     });
 });
 
@@ -23,10 +25,11 @@ $('#loginForm').submit(function (e) {
 $('#signup').submit(function (e) {
     e.preventDefault();
     $.post(root + 'php_actions/user_actions/create_user.php', $(this).serialize(), function (data) {
-        if (data==1) {
+        if (data == 1) {
             location.reload();
         }
-        else $('#signupmessage').html(data);
+        else
+            $('#signupmessage').html(data);
 
         $('#signup input').val("");
     });
