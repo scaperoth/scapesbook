@@ -28,7 +28,7 @@ include('variables/standard-variables.php');
                     </a>
                 </div><!--end site-title-->
                 <div class="description">
-                    <blockquote>Welcome to Scapesbook! Login or sign up below.</blockquote>
+                    <blockquote>Welcome to Scapesbook! Login or sign up below. To log in to the test users, type in the username (mscapero, test, or test2) and use the password "test".</blockquote>
                 </div>
             </header>
             <div class="container">
